@@ -5,7 +5,7 @@ import upload_area from './upload_area.png'
 import parcel_icon from './parcel_icon.svg'
 
 export const assets = {
-    logo,
+    logo:"https://res.cloudinary.com/dmmz8ldz9/image/upload/v1741605636/ecommerce-assets/flqrjp0nlmalt5vscokn.png",
     add_icon,
     order_icon,
     upload_area,
