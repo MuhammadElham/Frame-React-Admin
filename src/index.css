@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    font-family: Outfit;
+}
+.active{
+    border-color: #917431;
+    background-color: #d1a847;
+    color: white;
+    /* background-color: #ffebf5; */
+    /* border-color: #C586A5; */
+    
+}
