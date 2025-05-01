@@ -36,9 +36,9 @@ const Add = () => {
         <textarea className="w-full max-w-[500px] px-3 py-2" type="text" placeholder="Write content here" required />
       </div>
       {/*  */}
-      <div>
+      <div className="flex flex-col sm:flex-row gap-2 w-full sm:gap-8">
         <div>
-          <p>Product Category</p>
+          <p className="mb-2">Product Category</p>
           <select className="w-full px-3 py-2">
             <option value="Frame">Frame</option>
             <option value="Ring Trays">Ring Tray</option>
@@ -50,7 +50,7 @@ const Add = () => {
         </div>
 
         <div>
-          <p>Sub Category</p>
+          <p className="mb-2">Sub Category</p>
           <select className="w-full px-3 py-2">
             <option value="Frame">Frame</option>
             <option value="Ring Trays">Ring Tray</option>
@@ -63,9 +63,8 @@ const Add = () => {
 
         <div>
           <p>Product Price</p>
-          <input type="number" placeholder="25" />
+          <input className="w-full px-3 py-2 sm:w-[120px]" type="number" placeholder="25" />
         </div>
-
       </div>
     </form>
   );
