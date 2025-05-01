@@ -62,8 +62,20 @@ const Add = () => {
         </div>
 
         <div>
-          <p>Product Price</p>
+          <p className="mb-2">Product Price</p>
           <input className="w-full px-3 py-2 sm:w-[120px]" type="number" placeholder="25" />
+        </div>
+      </div>
+      {/*  */}
+      <div>
+        <p className="mb-2">Product Sizes</p>
+        <div className="flex gap-3">
+          <div>
+            <p className="bg-slate-200 px-3 py-1 cursor-pointer">12" x 24"</p>
+          </div>
+          <div>
+            <p className="bg-slate-200 px-3 py-1 cursor-pointer">11" x 17" (mini)</p>
+          </div>
         </div>
       </div>
     </form>
