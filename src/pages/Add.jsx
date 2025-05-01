@@ -1,7 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { assets } from "../assets/assets";
 
 const Add = () => {
+  const [image1, setImage1] = useState(false);
+  const [image2, setImage2] = useState(false);
+  const [image3, setImage3] = useState(false);
+  const [image4, setImage4] = useState(false);
+
   return (
     <form className="flex flex-col w-full items-start gap-3">
       <div>
@@ -81,8 +86,14 @@ const Add = () => {
       {/*  */}
       <div className="flex gap-2 mt-2">
         <input type="checkbox" id="bestseller" />
-        <label className="cursor-pointer" htmlFor="bestseller">Add to BestSeller</label>
+        <label className="cursor-pointer" htmlFor="bestseller">
+          Add to BestSeller
+        </label>
       </div>
+
+      <button type="submit" className="w-28 py-3 mt-4 bg-black text-white rounded-md border border-black text-xs sm:text-sm hover:bg-white hover:text-black transition-all duration-300">
+        ADD
+      </button>
     </form>
   );
 };
