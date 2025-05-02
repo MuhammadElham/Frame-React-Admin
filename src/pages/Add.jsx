@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { assets } from "../assets/assets";
 
 const Add = () => {
+  // State for Images
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
   const [image4, setImage4] = useState(false);
-
+  
+  // State for Fields
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
