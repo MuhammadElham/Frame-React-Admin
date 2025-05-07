@@ -88,14 +88,14 @@ const Add = () => {
           <div onClick={() => setSizes((prev) => (prev.includes('12" x 24"') ? prev.filter((item) => item !== '12" x 24"') : [...prev, '12" x 24"']))}>
             <p className={`${sizes.includes('12" x 24"') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>12" x 24"</p>
           </div>
-          <div onClick={() => setSizes((prev) => (prev.includes('11" x 17" (mini)') ? prev.filter((item) => item !== '11" x 17" (mini)') : [...prev , '11" x 17" (mini)']))}>
+          <div onClick={() => setSizes((prev) => (prev.includes('11" x 17" (mini)') ? prev.filter((item) => item !== '11" x 17" (mini)') : [...prev, '11" x 17" (mini)']))}>
             <p className={`${sizes.includes('11" x 17" (mini)') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} bg-slate-200 px-3 py-1 cursor-pointer`}>11" x 17" (mini)</p>
           </div>
         </div>
       </div>
       {/*  */}
       <div className="flex gap-2 mt-2">
-        <input type="checkbox" id="bestseller" />
+        <input onChange={() => setBestseller((prev) => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
         <label className="cursor-pointer" htmlFor="bestseller">
           Add to BestSeller
         </label>
