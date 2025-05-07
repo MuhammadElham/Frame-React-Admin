@@ -88,7 +88,7 @@ const Add = () => {
           <div onClick={() => setSizes((prev) => (prev.includes('12" x 24"') ? prev.filter((item) => item !== '12" x 24"') : [...prev]))}>
             <p className="bg-slate-200 px-3 py-1 cursor-pointer">12" x 24"</p>
           </div>
-          <div>
+          <div onClick={() => setSizes((prev) => (prev.includes('11" x 17" (mini)') ? prev.filter((item) => item !== '11" x 17" (mini)') : [...prev]))}>
             <p className="bg-slate-200 px-3 py-1 cursor-pointer">11" x 17" (mini)</p>
           </div>
         </div>
