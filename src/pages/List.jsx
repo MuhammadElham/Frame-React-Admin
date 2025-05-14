@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { backendUrl, currency } from "../App";
+import { backendUrl, currency, currencyCode } from "../App";
 import { toast } from "react-toastify";
 
 const List = ({ token }) => {
@@ -58,6 +58,7 @@ const List = ({ token }) => {
             <p>
               {currency}
               {item.price}
+              {currencyCode}
             </p>
             <p onClick={() => removeProduct(item._id)} className="text-right md:text-center cursor-pointer text-lg">
               X

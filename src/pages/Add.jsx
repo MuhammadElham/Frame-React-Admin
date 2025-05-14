@@ -130,7 +130,7 @@ const Add = ({ token }) => {
             <p className={`${sizes.includes('12" x 24"') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>12" x 24"</p>
           </div>
           <div onClick={() => setSizes((prev) => (prev.includes('11" x 17" (mini)') ? prev.filter((item) => item !== '11" x 17" (mini)') : [...prev, '11" x 17" (mini)']))}>
-            <p className={`${sizes.includes('11" x 17" (mini)') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} bg-slate-200 px-3 py-1 cursor-pointer`}>11" x 17" (mini)</p>
+            <p className={`${sizes.includes('11" x 17" (mini)') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>11" x 17" (mini)</p>
           </div>
         </div>
       </div>
