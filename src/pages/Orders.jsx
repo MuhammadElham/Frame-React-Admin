@@ -28,6 +28,7 @@ const Orders = ({ token }) => {
   useEffect(() => {
     fetchAllOrders();
   }, [token]);
+
   return (
     <div>
       <h3>Order Page</h3>
@@ -45,9 +46,20 @@ const Orders = ({ token }) => {
                     </p>
                   );
                 } else {
+                  return (
+                    <p key={index}>
+                      {item.name} x {item.quantity}
+                      <span>{item.size}</span> ,
+                    </p>
+                  );
                 }
               })}
             </div>
+
+    <p>{order.address.firstName + " " + order.address.lastName}</p>
+    <div>
+      
+    </div>
           </div>
         ))}
       </div>
