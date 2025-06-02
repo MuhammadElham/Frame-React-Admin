@@ -73,10 +73,10 @@ const Orders = ({ token }) => {
   <p>{currency + " "}{order.amount}{currencyCode}</p>
   <select>
     <option value="Order Placed">Order Placed</option>
-    <option value=""></option>
-    <option value=""></option>
-    <option value=""></option>
-    <option value=""></option>
+    <option value="Packing">Packing</option>
+    <option value="Shipped">Shipped</option>
+    <option value="Out of Delivery">Out of Delivery</option>
+    <option value="Delivered">Delivered</option>
   </select>
           </div>
         ))}
