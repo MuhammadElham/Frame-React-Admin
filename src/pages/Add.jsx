@@ -156,6 +156,52 @@ const Add = ({ token }) => {
           Add to BestSeller
         </label>
       </div>
+      {/* Testimonial */}
+      <div>
+        <h3>Add Testimonials</h3>
+        {/* Stars Icon */}
+        <div>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span key={star}>★</span>
+          ))}
+        </div>
+        {/* Testimonial Name */}
+        <div>
+          <p>Customer Name</p>
+          <input type="text" placeholder="Enter Customer name" />
+        </div>
+        {/* Heading (Optional) */}
+        <div>
+          <p>Heading (Optional)</p>
+          <input type="text" placeholder="E.g. Amazing product!" />
+        </div>
+        {/* Images (Optional) 
+        One Main Image
+        3 sub Images optional
+        */}
+        <div>
+          <p>Upload Images</p>
+          <div>
+            {/* Main Image */}
+            <label htmlFor="mainImage">
+              <img src={assets.upload_area} alt="main" />
+              <input type="file" id="mainImage" hidden />
+            </label>
+            {/* Sub Images */}
+            {[1, 2, 3].map((i) => (
+              <label key={i} htmlFor={`subImage${i}`}>
+                <img src={assets.upload_area} alt={`sub-${i}`} />
+                <input type="file" id={`subImage${i}`} hidden />
+              </label>
+            ))}
+          </div>
+        </div>
+        {/* Text */}
+        <div>
+          <p>Testimonial Text</p>
+          <textarea placeholder="Write customer feedback..."></textarea>
+        </div>
+      </div>
 
       <button type="submit" className="w-28 py-3 mt-4 bg-black text-white rounded-md border border-black text-xs sm:text-sm hover:bg-white hover:text-black transition-all duration-300">
         ADD
