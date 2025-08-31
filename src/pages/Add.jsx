@@ -6,10 +6,7 @@ import { toast } from "react-toastify";
 
 const Add = ({ token }) => {
   // State for Images
-  const [image1, setImage1] = useState(false);
-  const [image2, setImage2] = useState(false);
-  const [image3, setImage3] = useState(false);
-  const [image4, setImage4] = useState(false);
+  const [images, setImages] = useState([null, null, null, null]);
 
   // State for Fields
   const [name, setName] = useState("");
@@ -20,11 +17,22 @@ const Add = ({ token }) => {
   const [bestseller, setBestseller] = useState(false);
   const [sizes, setSizes] = useState([]);
 
+  // State for Testimonial
+  const [testimonial, setTestimonial] = useState({
+    name: "",
+    heading: "",
+    text: "",
+    rating: 0,
+    mainImage: null,
+    subImages: [null, null, null],
+  });
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
 
+      // Product data
       formData.append("name", name);
       formData.append("description", description);
       formData.append("price", price);
@@ -33,177 +41,240 @@ const Add = ({ token }) => {
       formData.append("bestseller", bestseller);
       formData.append("sizes", JSON.stringify(sizes));
 
-      image1 && formData.append("image1", image1);
-      image2 && formData.append("image2", image2);
-      image3 && formData.append("image3", image3);
-      image4 && formData.append("image4", image4);
+      // Testimonial data
+      formData.append(
+        "testimonials",
+        JSON.stringify({
+          name: testimonial.name,
+          heading: testimonial.heading,
+          text: testimonial.text,
+          rating: testimonial.rating,
+        })
+      );
 
-      const response = await axios.post(backendUrl + "/api/product/add", formData, { headers: { token } });
+      // Images
+      images.forEach((img, index) => img && formData.append(`image${index + 1}`, img));
+      testimonial.mainImage && formData.append("testimonialMainImage", testimonial.mainImage);
+      testimonial.subImages.forEach((img, index) => img && formData.append(`testimonialSubImage${index + 1}`, img));
+
+      const formDataObject = Object.fromEntries(formData);
+      console.log(formDataObject);
+
+      const response = await axios.post(`${backendUrl}/api/product/add`, formData, { headers: { token } });
+
       if (response.data.success) {
         toast.success(response.data.message);
+
+        // Reset all fields
         setName("");
         setDescription("");
-        setImage1(false);
-        setImage2(false);
-        setImage3(false);
-        setImage4(false);
         setPrice("");
+        setCategory("Frame");
+        setSubCategory("Ring Tray");
+        setBestseller(false);
         setSizes([]);
+        setImages([null, null, null, null]);
+        setTestimonial({
+          name: "",
+          heading: "",
+          text: "",
+          rating: 0,
+          mainImage: null,
+          subImages: [null, null, null],
+        });
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      if (error.response) {
+        // Server responded with status code != 2xx
+        console.log("Backend error:", error.response.data);
+        console.log("Status code:", error.response.status);
+        toast.error("Server Error: " + (error.response.data.message || error.response.status));
+      } else if (error.request) {
+        // Request made but no response
+        console.log("No response from server:", error.request);
+        toast.error("No response from server");
+      } else {
+        // Something else
+        console.log("Error:", error.message);
+        toast.error(error.message);
+      }
     }
   };
 
-  // Logic
   const showSizeSelector = category === "Frame" || subCategory === "Frame";
 
   return (
     <form onSubmit={onSubmitHandler} className="flex flex-col w-full items-start gap-3">
+      {/* Images */}
       <div>
         <p className="mb-2">Upload Image</p>
         <div className="flex gap-2">
-          <label htmlFor="image1">
-            <img className="w-20" src={!image1 ? assets.upload_area : URL.createObjectURL(image1)} alt="" />
-            <input onChange={(e) => setImage1(e.target.files[0])} type="file" id="image1" hidden />
-          </label>
-          <label htmlFor="image2">
-            <img className="w-20" src={!image2 ? assets.upload_area : URL.createObjectURL(image2)} alt="" />
-            <input onChange={(e) => setImage2(e.target.files[0])} type="file" id="image2" hidden />
-          </label>
-          <label htmlFor="image3">
-            <img className="w-20" src={!image3 ? assets.upload_area : URL.createObjectURL(image3)} alt="" />
-            <input onChange={(e) => setImage3(e.target.files[0])} type="file" id="image3" hidden />
-          </label>
-          <label htmlFor="image4">
-            <img className="w-20" src={!image4 ? assets.upload_area : URL.createObjectURL(image4)} alt="" />
-            <input onChange={(e) => setImage4(e.target.files[0])} type="file" id="image4" hidden />
-          </label>
+          {images.map((img, index) => (
+            <label key={index} htmlFor={`image${index}`}>
+              <img className="w-20" src={img ? URL.createObjectURL(img) : assets.upload_area} alt="" />
+              <input
+                type="file"
+                id={`image${index}`}
+                hidden
+                onChange={(e) => {
+                  const newImages = [...images];
+                  newImages[index] = e.target.files[0];
+                  setImages(newImages);
+                }}
+              />
+            </label>
+          ))}
         </div>
       </div>
-      {/*  */}
+
+      {/* Name & Description */}
       <div className="w-full">
         <p className="mb-2">Product Name</p>
-        <input onChange={(e) => setName(e.target.value)} value={name} className="w-full max-w-[500px] px-3 py-2" type="text" placeholder="Type here" required />
+        <input
+          type="text"
+          value={name}
+          placeholder="Type here"
+          onChange={(e) => setName(e.target.value)}
+          className="w-full max-w-[500px] px-3 py-2"
+          required
+        />
       </div>
-
       <div className="w-full">
         <p className="mb-2">Product Description</p>
-        <textarea onChange={(e) => setDescription(e.target.value)} value={description} className="w-full max-w-[500px] px-3 py-2" type="text" placeholder="Write content here" required />
+        <textarea
+          value={description}
+          placeholder="Write content here"
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full max-w-[500px] px-3 py-2"
+          required
+        />
       </div>
-      {/*  */}
+
+      {/* Category & Price */}
       <div className="flex flex-col sm:flex-row gap-2 w-full sm:gap-8">
         <div>
           <p className="mb-2">Product Category</p>
-          <select onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-2">
-            <option value="Frame">Frame</option>
-            <option value="Ring Trays" setFrame>
-              Ring Tray
-            </option>
-            <option value="Welcome Board" setFrame>
-              Welcome Board
-            </option>
-            <option value="Sweet Box" setFrame>
-              Sweet Box
-            </option>
-            <option value="Pen" setFrame>
-              Pen
-            </option>
-            <option value="Dupatta" setFrame>
-              Dupatta
-            </option>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full px-3 py-2">
+            {["Frame", "Ring Tray", "Welcome Board", "Sweet Box", "Pen", "Dupatta"].map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
           </select>
         </div>
-
         <div>
           <p className="mb-2">Sub Category</p>
-          <select onChange={(e) => setSubCategory(e.target.value)} className="w-full px-3 py-2">
-            <option value="Frame">Frame</option>
-            <option value="Ring Trays">Ring Tray</option>
-            <option value="Welcome Board">Welcome Board</option>
-            <option value="Sweet Box">Sweet Box</option>
-            <option value="Pen">Pen</option>
-            <option value="Dupatta">Dupatta</option>
+          <select value={subCategory} onChange={(e) => setSubCategory(e.target.value)} className="w-full px-3 py-2">
+            {["Frame", "Ring Tray", "Welcome Board", "Sweet Box", "Pen", "Dupatta"].map((sub) => (
+              <option key={sub} value={sub}>
+                {sub}
+              </option>
+            ))}
           </select>
         </div>
-
         <div>
           <p className="mb-2">Product Price</p>
-          <input onChange={(e) => setPrice(e.target.value)} value={price} className="w-full px-3 py-2 sm:w-[120px]" type="number" placeholder="25" />
+          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="w-full px-3 py-2 sm:w-[120px]" placeholder="25" />
         </div>
       </div>
-      {/* Logic */}
+
+      {/* Sizes */}
       {showSizeSelector && (
         <div>
           <p className="mb-2">Product Sizes</p>
           <div className="flex gap-3">
-            <div onClick={() => setSizes((prev) => (prev.includes('12" x 24"') ? prev.filter((item) => item !== '12" x 24"') : [...prev, '12" x 24"']))}>
-              <p className={`${sizes.includes('12" x 24"') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>12" x 24"</p>
-            </div>
-            <div onClick={() => setSizes((prev) => (prev.includes('11" x 17" (mini)') ? prev.filter((item) => item !== '11" x 17" (mini)') : [...prev, '11" x 17" (mini)']))}>
-              <p className={`${sizes.includes('11" x 17" (mini)') ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>11" x 17" (mini)</p>
-            </div>
-          </div>
-        </div>
-      )}
-      {/*  */}
-      <div className="flex gap-2 mt-2">
-        <input onChange={() => setBestseller((prev) => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
-        <label className="cursor-pointer" htmlFor="bestseller">
-          Add to BestSeller
-        </label>
-      </div>
-      {/* Testimonial */}
-      <div>
-        <h3>Add Testimonials</h3>
-        {/* Stars Icon */}
-        <div>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <span key={star}>★</span>
-          ))}
-        </div>
-        {/* Testimonial Name */}
-        <div>
-          <p>Customer Name</p>
-          <input type="text" placeholder="Enter Customer name" />
-        </div>
-        {/* Heading (Optional) */}
-        <div>
-          <p>Heading (Optional)</p>
-          <input type="text" placeholder="E.g. Amazing product!" />
-        </div>
-        {/* Images (Optional) 
-        One Main Image
-        3 sub Images optional
-        */}
-        <div>
-          <p>Upload Images</p>
-          <div>
-            {/* Main Image */}
-            <label htmlFor="mainImage">
-              <img src={assets.upload_area} alt="main" />
-              <input type="file" id="mainImage" hidden />
-            </label>
-            {/* Sub Images */}
-            {[1, 2, 3].map((i) => (
-              <label key={i} htmlFor={`subImage${i}`}>
-                <img src={assets.upload_area} alt={`sub-${i}`} />
-                <input type="file" id={`subImage${i}`} hidden />
-              </label>
+            {['12" x 24"', '11" x 17" (mini)'].map((size) => (
+              <p
+                key={size}
+                onClick={() => setSizes((prev) => (prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]))}
+                className={`${sizes.includes(size) ? "bg-[#d1a847] border border-[#917431] text-white" : "bg-slate-200"} px-3 py-1 cursor-pointer`}
+              >
+                {size}
+              </p>
             ))}
           </div>
         </div>
-        {/* Text */}
-        <div>
-          <p>Testimonial Text</p>
-          <textarea placeholder="Write customer feedback..."></textarea>
-        </div>
+      )}
+
+      {/* Bestseller */}
+      <div className="flex gap-2 mt-2">
+        <input type="checkbox" checked={bestseller} onChange={() => setBestseller((prev) => !prev)} id="bestseller" />
+        <label htmlFor="bestseller" className="cursor-pointer">
+          Add to BestSeller
+        </label>
       </div>
 
-      <button type="submit" className="w-28 py-3 mt-4 bg-black text-white rounded-md border border-black text-xs sm:text-sm hover:bg-white hover:text-black transition-all duration-300">
+      {/* Testimonial */}
+      <div className="w-full mt-6 border-t pt-4">
+        <h3 className="text-lg font-semibold mb-3">Add Testimonials</h3>
+        <div className="flex items-center gap-1 mb-3">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <span
+              key={star}
+              onClick={() => setTestimonial((prev) => ({ ...prev, rating: star }))}
+              className={`cursor-pointer text-xl ${testimonial.rating >= star ? "text-yellow-500" : "text-gray-300"}`}
+            >
+              ★
+            </span>
+          ))}
+        </div>
+
+        <div className="flex flex-col  ">
+          <input
+            type="text"
+            value={testimonial.name}
+            placeholder="Customer Name"
+            onChange={(e) => setTestimonial((prev) => ({ ...prev, name: e.target.value }))}
+            className="w-full max-w-[500px] px-3 py-2 border rounded mb-3"
+          />
+
+          <input
+            type="text"
+            value={testimonial.heading}
+            placeholder="Heading (Optional)"
+            onChange={(e) => setTestimonial((prev) => ({ ...prev, heading: e.target.value }))}
+            className="w-full max-w-[500px] px-3 py-2 border rounded mb-3"
+          />
+        </div>
+
+        <div className="flex gap-2 mb-3">
+          <label>
+            <img
+              src={testimonial.mainImage ? URL.createObjectURL(testimonial.mainImage) : assets.upload_area}
+              className="w-24 h-24 object-cover border rounded cursor-pointer"
+            />
+            <input type="file" hidden onChange={(e) => setTestimonial((prev) => ({ ...prev, mainImage: e.target.files[0] }))} />
+          </label>
+          {testimonial.subImages.map((img, i) => (
+            <label key={i}>
+              <img src={img ? URL.createObjectURL(img) : assets.upload_area} className="w-20 h-20 object-cover border rounded cursor-pointer" />
+              <input
+                type="file"
+                hidden
+                onChange={(e) => {
+                  const newSub = [...testimonial.subImages];
+                  newSub[i] = e.target.files[0];
+                  setTestimonial((prev) => ({ ...prev, subImages: newSub }));
+                }}
+              />
+            </label>
+          ))}
+        </div>
+
+        <textarea
+          value={testimonial.text}
+          placeholder="Write customer feedback..."
+          onChange={(e) => setTestimonial((prev) => ({ ...prev, text: e.target.value }))}
+          className="w-full max-w-[500px] px-3 py-2 border rounded"
+        />
+      </div>
+
+      <button
+        type="submit"
+        className="w-28 py-3 mt-4 bg-black text-white rounded-md border border-black text-xs sm:text-sm hover:bg-white hover:text-black transition-all duration-300"
+      >
         ADD
       </button>
     </form>
